@@ -1,4 +1,4 @@
-#Linux CLI
+## Linux CLI
 
 ```
 # Check disk usage based on folder with depth (d), human readable(h)
@@ -34,7 +34,7 @@ iostat -zx 1
 sar -n DEV 1
 ```
 
-#MySQL
+## MySQL
 
 ```
 # Duplicate schema based on other schema
@@ -54,7 +54,7 @@ mysql -h <host> -u <user_name> -p <pass_word> DB -e "QUERY" >> result.csv;
 sed -i 's/\t/,/g' result.csv
 ```
 
-#Git
+## Git
 
 ```
 # add new origin
@@ -67,7 +67,7 @@ git reset HEAD --hard
 git checkout <branch>
 ```
 
-#Docker
+## Docker
 
 ```
 # interactive docker container
@@ -83,7 +83,7 @@ docker run (image) sh -c "cmd1 && cmd2 && cmd3"
 ENTRYPOINT ["executable", "param1", "param2"]
 ```
 
-#Ansible
+## Ansible
 
 ```
 # common
@@ -92,13 +92,13 @@ ansible all -m shell -a "ls -la"
 ansible webservers -m service -a "name=httpd state=started"
 ```
 
-#OpenVPN
+## OpenVPN
 
 ```
 # login with openvpn client
 openvpn --config xxx.ovpn
 ```
 
-#Contact
+## Contact
 
 Binh Nguyen
