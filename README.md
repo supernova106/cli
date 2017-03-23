@@ -1,3 +1,6 @@
+## AWS
+- get AMI ID based on name `aws ec2 describe-images --region=us-east-1 --filters "Name=name,Values=AMI_NAME" | grep ImageId | awk  '{print $2}' | cut -d\" -f2`
+
 ## Linux CLI
 
 ```
