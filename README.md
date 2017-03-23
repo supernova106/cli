@@ -1,4 +1,5 @@
 #Linux CLI
+
 ```
 # Check disk usage based on folder with depth (d), human readable(h)
 du -h -d 1
@@ -34,6 +35,7 @@ sar -n DEV 1
 ```
 
 #MySQL
+
 ```
 # Duplicate schema based on other schema
 mysqldump -h [server] -u [user] -p[password] db1 | mysql -h [server] -u [user] -p[password] db2
@@ -45,7 +47,15 @@ FLUSH PRIVILEGES;
 mysql>SHOW FULL PROCESSLIST;
 ```
 
+- Output SQL query to CSV
+
+```
+mysql -h <host> -u <user_name> -p <pass_word> DB -e "QUERY" >> result.csv;
+sed -i 's/\t/,/g' result.csv
+```
+
 #Git
+
 ```
 # add new origin
 git remote add origin <origin>
@@ -58,6 +68,7 @@ git checkout <branch>
 ```
 
 #Docker
+
 ```
 # interactive docker container
 docker exec -it <docker_id> bash
@@ -73,6 +84,7 @@ ENTRYPOINT ["executable", "param1", "param2"]
 ```
 
 #Ansible
+
 ```
 # common
 ansible all -m shell -a "ls -la"
@@ -81,10 +93,12 @@ ansible webservers -m service -a "name=httpd state=started"
 ```
 
 #OpenVPN
+
 ```
 # login with openvpn client
 openvpn --config xxx.ovpn
 ```
 
 #Contact
+
 Binh Nguyen
