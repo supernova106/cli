@@ -7,6 +7,46 @@
 
 ```
 finger username
+id username
+chage -l username
+groups username
+```
+
+- Scanning for a single port 
+
+```
+nmap -p portnumber hostname
+```
+
+- Scan entire machine for checking open ports.
+
+```
+nmap hostname
+```
+
+- Scan entire network for open ports
+
+```
+nmap network ID/subnet-mask
+```
+
+- Scan the machine and give as much details as possible
+
+```
+nmap -v hostname
+```
+
+- Scan a machine for TCP/UDP open ports
+
+```
+nmap -sT hostname
+nmap -sU hostname
+```
+
+-  To check which protocol(not port) such as TCP, UDP, ICMP ...
+
+```
+nmap -sO hostname
 ```
 
 - Check disk usage based on folder with depth (d), human readable(h)
