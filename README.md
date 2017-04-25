@@ -3,12 +3,27 @@
 
 ## Linux CLI
 
+- Monitoring user
+
 ```
-# Check disk usage based on folder with depth (d), human readable(h)
+finger username
+```
+
+- Check disk usage based on folder with depth (d), human readable(h)
+
+```
 du -h -d 1
-# Get all files older than X days. Add -delete at the end to remove the result.
+```
+
+- Get all files older than X days. Add -delete at the end to remove the result.
+
+```
 find * -type f -mtime +X -delete
-# get PHP modules extension
+```
+
+- get PHP modules extension
+
+```
 grep -Hrv ";" /etc | grep -i "extension="
 -r or -R is recursive,
 -n is line number, and
@@ -16,37 +31,77 @@ grep -Hrv ";" /etc | grep -i "extension="
 -l (lower-case L) can be added to just give the file name of matching files.
 Along with these, --exclude or --include parameter could be used for efficient searching. Something like below:
 grep --include=\*.{c,h} -rnw '/path/to/somewhere/' -e "pattern"
-# find php.ini
+```
+
+- find php.ini
+
+```
 php -i | grep "Loaded Configuration File"
-# check OS type
+```
+
+- check OS type
+
+```
 uname -a
-# check filesystem
+```
+
+- check filesystem
+
+```
 file -s /dev/<device>
-# check all crontabs
+```
+
+- check all crontabs
+
+```
 crontab -l
 crontab -u username -l
-# stress CPU
-stress --cpu 2 --timeout 60
-# view load average
-uptime
+```
 
-#troubleshoot
+- stress CPU
+
+```
+stress --cpu 2 --timeout 60
+```
+
+- view load average
+
+```
+uptime
+```
+
+- troubleshoot
+
+```
 pidstat 1
 iostat -zx 1
-#network interface throughput: rzkb/s and txkb/s
+```
+
+- network interface throughput: rzkb/s and txkb/s
+
+```
 sar -n DEV 1
 ```
 
 ## MySQL
 
+- Duplicate schema based on other schema
+
 ```
-# Duplicate schema based on other schema
 mysqldump -h [server] -u [user] -p[password] db1 | mysql -h [server] -u [user] -p[password] db2
-# Create User
+```
+
+- Create User
+
+```
 CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
 FLUSH PRIVILEGES;
-# See full query
+```
+
+- See full query
+
+```
 mysql>SHOW FULL PROCESSLIST;
 ```
 
