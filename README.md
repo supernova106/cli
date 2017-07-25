@@ -51,6 +51,7 @@ sudo du -hs * | sort -rh | head -5
 sudo find . -mtime +14 -exec rm -ir {} \;
 # Get all files older than X days. Add -delete at the end to remove the result.
 find * -type f -mtime +X -delete
+```
 
 - get PHP modules extension
 
