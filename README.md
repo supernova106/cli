@@ -12,6 +12,36 @@ chage -l username
 groups username
 ```
 
+- file transfer
+
+```
+/usr/bin/rsync -Pau -e "ssh -i $HOME/.ssh/[private_key]"  [username]@[host]:/path/*.war $HOME/dest/
+```
+
+- sendmail
+
+```
+# cd /var/spool/mqueue
+# grep -l "No acceptable" * | xargs -I {} rm {}
+# grep -l "admin1" * | xargs -I {} rm {}
+# grep -l "admin2" * | xargs -I {} rm {}
+# grep -l "amandabackup" * | xargs -I {} rm {}
+# no. of mails in the queue
+sendmail -bp
+# cleanup
+/var/spool/mqueu*
+find . -type f | xargs rm -rf
+# user mailbox
+/var/mail/
+```
+
+- PBIS Open
+
+```
+/opt/pbis/bin/get-status
+/opt/pbis/bin/find-objects --user <user_name>
+```
+
 - packages
 
 ```
@@ -201,6 +231,42 @@ z	Color or mono (default on) show colors
 sar -n DEV 1
 ```
 
+## Screen
+
+```
+screen
+Ctrl + A and ?
+# detach
+d
+# restore
+screen -r
+screen -ls
+screen -r [id]
+# view screen from other user
+script /dev/null
+screen -r
+```
+
+## SSL
+
+- copy self-signed CA cert to `/usr/local/share/ca-certificates/`
+- run `sudo update-ca-certificates`
+- verify that you can find the new certificate in `/etc/ssl/certs/ca-certificates.crt`
+- retrieve public cert via openssl
+
+```
+openssl s_client -connect <host>:<port>
+# Check a certificate and return information about it (signing authority, expiration date, etc.):
+openssl x509 -in server.crt -text -noout
+# Check the SSL key and verify the consistency:
+openssl rsa -in server.key -check
+# Verify the CSR and print CSR data filled in when generating the CSR:
+openssl req -text -noout -verify -in server.csr
+# These two commands print out md5 checksums of the certificate and key; the checksums can be compared to verify that the certificate and key match.
+openssl x509 -noout -modulus -in server.crt| openssl md5
+openssl rsa -noout -modulus -in server.key| openssl md5
+```
+
 ## MySQL
 
 - Duplicate schema based on other schema
@@ -290,6 +356,8 @@ kinit -p [user]@[domain]
 
 ```
 ldapsearch -x -LLL -h [host] -D [user] -w [password] -b cn=Users,dc=corp,dc=ebates,dc=com -s sub "(objectClass=user)" givenName
+# with SSL/TLS
+ldapsearch -x -ZZ -LLL -h [host] -D [user] -w [password] -b cn=Users,dc=corp,dc=ebates,dc=com -s sub "(objectClass=user)" givenName
 ```
 
 - join AD
@@ -302,6 +370,23 @@ domainjoin-cli join secure.local domain-bind
 
 - plugins: `/usr/local/nagios/plugins/`
 - check syntax `/usr/local/nagios/bin/nagios -v /etc/nagios.cfg`
+
+```
+ /usr/local/nagios/libexec/check_by_ssh -H [host] -l nagios -C'/usr/local/nagios/libexec/check_disk -w 15% -c 10% -p /productdb'
+```
+
+## PID debug
+
+```
+strace -p 4293 -s 80 -o /tmp/debug.php
+```
+
+## Hack
+
+```
+# cause system not logging bash commands
+ln -s /dev/null .bash_history
+```
 
 ## Security
 
@@ -319,6 +404,8 @@ timedatectl status
 # monlist attack
 ntpdc -n -c monlist localhost
 ntpdc -c sysinfo
+# get the descrepency
+ntpq -pn | /usr/bin/awk 'BEGIN { offset=1000 } $1 ~ /\*/ { offset=$9 } END { print offset }'
 ```
 - SSH
 
