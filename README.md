@@ -1,7 +1,54 @@
 ## AWS
 - get AMI ID based on name `aws ec2 describe-images --region=us-east-1 --filters "Name=name,Values=AMI_NAME" | grep ImageId | awk  '{print $2}' | cut -d\" -f2`
+- export list ec2 instances to excel sheet
+
+```
+ec2 describe-instances --output text --query 'Reservations[*].Instances[*].[InstanceId, InstanceType, ImageId, State.Name, LaunchTime, Placement.AvailabilityZone, Placement.Tenancy, PrivateIpAddress, PrivateDnsName, PublicDnsName, [Tags[?Key==`Name`].Value] [0][0], [Tags[?Key==`purpose`].Value] [0][0], [Tags[?Key==`environment`].Value] [0][0], [Tags[?Key==`team`].Value] [0][0] ]' > instances.tsv
+# open instances.tsv with Excel
+# enjoy
+```
+
+## Chef
+
+- create org
+
+```
+chef-server-ctl org-create name "NICE NAME"
+```
+
+- create new user
+
+```
+chef-server-ctl  user-create lolha Lol Ha lolha@example.com password -f /root/pem/lolha.pem
+```
+
+- grant admin access to an organization
+
+```
+chef-server-ctl org-user-add techops lolha --admin
+```
 
 ## Linux CLI
+
+- Find Outbound Public IP address
+
+```
+curl -s http://ipchicken.com | egrep -o '([[:digit:]]{1,3}\.){3}[[:digit:]]{1,3}'
+```
+
+- run command line with argument from line of a text file `<file.txt xargs -I % <commmand> %`
+- key pem to JSON `sed ':a;N;$!ba;s/\n/\\n/g' my_key.pem`
+- get the error log within an amount of time
+
+```
+awk -v d1="$(date --date="-2 min" "+%b %_d %H:%M")" -v d2="$(date "+%b %_d %H:%M")" '$0 > d1 && $0 < d2 || $0 ~ d2' /var/log/usc/uscapp.log | egrep -i '(false|ERROR)'
+```
+
+- total memory
+
+```
+free -mh | egrep -o '^Mem:\s*([0-9].[0-9]G)' | cut -d':' -f2 | tr -d ' '
+```
 
 - Monitoring user
 
@@ -227,13 +274,23 @@ z	Color or mono (default on) show colors
 
 - network interface throughput: rzkb/s and txkb/s
 
-```
+```shell
 sar -n DEV 1
+```
+
+## Locale
+
+Fix locale issue
+
+```shell
+export LC_ALL="en_US.UTF-8"
+export LC_CTYPE="en_US.UTF-8"
+sudo dpkg-reconfigure locales
 ```
 
 ## Screen
 
-```
+```shell
 screen
 Ctrl + A and ?
 # detach
@@ -249,10 +306,20 @@ screen -r
 
 ## SSL
 
+- generate SSL self-signed cert
+
+```shell
+sudo openssl req -x509 -nodes -days 720 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+```
+
 - copy self-signed CA cert to `/usr/local/share/ca-certificates/`
 - run `sudo update-ca-certificates`
 - verify that you can find the new certificate in `/etc/ssl/certs/ca-certificates.crt`
 - retrieve public cert via openssl
+
+```shell
+ex +'/BEGIN CERTIFICATE/,/END CERTIFICATE/p' <(echo | openssl s_client -showcerts -connect www.example.com:443) -scq > file.crt
+```
 
 ```
 openssl s_client -connect <host>:<port>
@@ -307,6 +374,10 @@ git remote set-url origin
 git reset HEAD --hard
 # switch branch
 git checkout <branch>
+# tracking git commits to a file
+git log --follow filename
+# compare the diff in a commit
+git diff COMMIT^ COMMIT
 ```
 
 ## Docker
@@ -366,6 +437,13 @@ ldapsearch -x -ZZ -LLL -h [host] -D [user] -w [password] -b cn=Users,dc=corp,dc=
 domainjoin-cli join secure.local domain-bind
 ```
 
+- bug fix in ubuntu 14.04 when joining to a domain
+
+```
+killall aptd
+apt-get install packagekit adcli
+```
+
 ## Nagios
 
 - plugins: `/usr/local/nagios/plugins/`
@@ -389,6 +467,64 @@ ln -s /dev/null .bash_history
 ```
 
 ## Security
+
+- likewise
+
+```
+/opt/pbis/bin/config --dump
+/opt/pbis/bin/get-status
+/opt/pbis/bin/find-objects --user USERNAME
+```
+
+/etc/pam.d/common-session
+
+```
+session [default=1]                     pam_permit.so
+session requisite                       pam_deny.so
+session required                        pam_permit.so
+session optional                        pam_umask.so
+session required                        pam_unix.so
+session optional                        pam_mount.so
+session [success=ok default=ignore]     pam_lsass.so
+session optional                        pam_systemd.so
+```
+
+/etc/pam.d/common-auth
+
+```
+auth    [success=2 default=ignore]      pam_unix.so nullok_secure
+auth    [success=1 default=ignore]      pam_lsass.so try_first_pass
+auth    requisite                       pam_deny.so
+auth    required                        pam_permit.so
+auth    optional                        pam_cap.so
+auth    optional                        pam_mount.so
+```
+
+/opt/pbis/share/pbis.pam-auth-update
+
+```
+Name: Likewise
+Default: yes
+Priority: 250
+Conflicts: winbind
+Auth-Type: Primary
+Auth:
+        [success=end default=ignore]    pam_lsass.so try_first_pass
+Auth-Initial:
+        [success=end default=ignore]    pam_lsass.so
+Account-Type: Primary
+Account:
+        [success=ok new_authtok_reqd=ok default=ignore]         pam_lsass.so unknown_ok
+        [success=end new_authtok_reqd=done default=ignore]      pam_lsass.so
+Session-Type: Additional
+Session:
+        sufficient      pam_lsass.so
+Password-Type: Primary
+Password:
+        [success=end default=ignore]    pam_lsass.so use_authtok try_first_pass
+Password-Initial:
+        [success=end default=ignore]    pam_lsass.so
+```
 
 - NTP
 
