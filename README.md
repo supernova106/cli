@@ -8,6 +8,18 @@ ec2 describe-instances --output text --query 'Reservations[*].Instances[*].[Inst
 # enjoy
 ```
 
+- user-data
+
+```
+curl http://169.254.169.254/latest/user-data
+```
+
+- iam 
+
+```
+curl http://169.254.169.254/latest/meta-data/iam/info
+```
+
 ## Docker
 
 Containers
@@ -114,6 +126,12 @@ chef-server-ctl org-user-add techops lolha --admin
 ```
 
 ## Linux CLI
+
+- Insert on ignore to a text file
+
+```
+grep -q -F 'BLAH BLHA "BLOH"' /etc/hosts || echo 'BLAH BLHA "BLOH"' >> /etc/hosts
+```
 
 - Find Outbound Public IP address
 
@@ -394,7 +412,7 @@ screen -r
 - generate SSL self-signed cert
 
 ```shell
-sudo openssl req -x509 -nodes -days 720 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
+sudo openssl req -x509 -nodes -days 3650 -newkey rsa:2048 -keyout /etc/apache2/ssl/apache.key -out /etc/apache2/ssl/apache.crt
 ```
 
 - copy self-signed CA cert to `/usr/local/share/ca-certificates/`
@@ -479,6 +497,14 @@ docker rm $(docker ps -a | grep Exited | awk '{print $1}')
 docker run (image) sh -c "cmd1 && cmd2 && cmd3"
 # entrypoint
 ENTRYPOINT ["executable", "param1", "param2"]
+```
+
+## Consul
+
+Check node status
+
+```
+curl http://127.0.0.1:8500/v1/health/node/<node_name>
 ```
 
 ## Ansible
@@ -634,6 +660,16 @@ ntpq -pn | /usr/bin/awk 'BEGIN { offset=1000 } $1 ~ /\*/ { offset=$9 } END { pri
 sudo sshd -T |grep ciphers => ciphers aes256-ctr
 add "ciphers aes256-ctr" to "/etc/ssh/sshd_config", restart sshd service
 ```
+
+### JAVA
+
+install java8 on ubuntu 14.04
+
+```shell
+sudo apt-get update && sudo apt-get install oracle-java8-installer
+sudo apt-get install oracle-java8-set-default
+```
+
 ## Contact
 
 Binh Nguyen
