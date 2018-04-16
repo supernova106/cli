@@ -125,6 +125,27 @@ chef-server-ctl  user-create lolha Lol Ha lolha@example.com password -f /root/pe
 chef-server-ctl org-user-add techops lolha --admin
 ```
 
+- Manage cookbooks dependencies with Berkshelf
+
+```
+$ cat Berksfile
+source :chef_server
+source "https://supermarket.chef.io"
+
+metadata
+```
+
+```
+vim ~/.berkshelf/config.json
+{
+  "ssl": {
+    "verify": false
+  }
+}
+berks install
+berks upload --ssl-verify=false
+```
+
 ## Linux CLI
 
 - Insert on ignore to a text file
@@ -448,8 +469,8 @@ mysqldump -h [server] -u [user] -p[password] db1 | mysql -h [server] -u [user] -
 - Create User
 
 ```
-CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
+CREATE USER 'grafana'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON grafana . * TO 'grafana'@'%';
 FLUSH PRIVILEGES;
 ```
 
@@ -654,7 +675,12 @@ ntpdc -c sysinfo
 # get the descrepency
 ntpq -pn | /usr/bin/awk 'BEGIN { offset=1000 } $1 ~ /\*/ { offset=$9 } END { print offset }'
 ```
-- SSH
+
+### SSH
+
+`ssh -Q cipher` from the client will tell you which schemes your client supports.
+
+`nmap --script ssh2-enum-algos -sV -p <port> <host>` will tell you which schemes your server supports.
 
 ```
 sudo sshd -T |grep ciphers => ciphers aes256-ctr
