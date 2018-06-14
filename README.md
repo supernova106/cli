@@ -125,6 +125,27 @@ chef-server-ctl  user-create lolha Lol Ha lolha@example.com password -f /root/pe
 chef-server-ctl org-user-add techops lolha --admin
 ```
 
+- Manage cookbooks dependencies with Berkshelf
+
+```
+$ cat Berksfile
+source :chef_server
+source "https://supermarket.chef.io"
+
+metadata
+```
+
+```
+vim ~/.berkshelf/config.json
+{
+  "ssl": {
+    "verify": false
+  }
+}
+berks install
+berks upload --ssl-verify=false
+```
+
 ## Linux CLI
 
 - Insert on ignore to a text file
