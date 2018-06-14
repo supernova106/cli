@@ -341,9 +341,32 @@ big : Opposite to bucket state.
 
 ```
 
+- Ubuntu 16.04 use systemd, (runlevel only exists in init system)
+```
+   Mapping between runlevels and systemd targets
+   ┌─────────┬───────────────────┐
+   │Runlevel │ Target            │
+   ├─────────┼───────────────────┤
+   │0        │ poweroff.target   │
+   ├─────────┼───────────────────┤
+   │1        │ rescue.target     │
+   ├─────────┼───────────────────┤
+   │2, 3, 4  │ multi-user.target │
+   ├─────────┼───────────────────┤
+   │5        │ graphical.target  │
+   ├─────────┼───────────────────┤
+   │6        │ reboot.target     │
+   └─────────┴───────────────────┘
+```
+
 - top
 
 ```
+top -o %MEM # Sort by memory usage
+top -o %CPU # Sort by cpu usage
+
+# Shift + F to display help
+
 Key Switches For The Top Command:
 -h - Show the current version
 -c - This toggles the command column between showing command and program name
@@ -448,8 +471,8 @@ mysqldump -h [server] -u [user] -p[password] db1 | mysql -h [server] -u [user] -
 - Create User
 
 ```
-CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON * . * TO 'newuser'@'localhost';
+CREATE USER 'grafana'@'%' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON grafana . * TO 'grafana'@'%';
 FLUSH PRIVILEGES;
 ```
 
@@ -534,6 +557,7 @@ klist -t -k /etc/krb5.keytab
 kinit -p [user]@[domain]
 ```
 
+- SSSD debugging `sudo sssd -d9 -i`
 - LDAP
 
 ```
@@ -654,7 +678,12 @@ ntpdc -c sysinfo
 # get the descrepency
 ntpq -pn | /usr/bin/awk 'BEGIN { offset=1000 } $1 ~ /\*/ { offset=$9 } END { print offset }'
 ```
-- SSH
+
+### SSH
+
+`ssh -Q cipher` from the client will tell you which schemes your client supports.
+
+`nmap --script ssh2-enum-algos -sV -p <port> <host>` will tell you which schemes your server supports.
 
 ```
 sudo sshd -T |grep ciphers => ciphers aes256-ctr
