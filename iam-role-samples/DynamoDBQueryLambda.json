@@ -1,0 +1,23 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Condition": {
+                "ForAllValues:StringEquals": {
+                    "dynamodb:Attributes": [
+                        "SuperHero",
+                        "MissionStatus",
+                        "Villain1",
+                        "Villain2",
+                        "Villain3"
+                    ]
+                }
+            },
+            "Action": [
+                "dynamodb:Query"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        }
+    ]
+}
